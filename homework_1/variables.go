@@ -1,8 +1,8 @@
-package task
+package main
 
 import "fmt"
 
-func Variables() {
+func main() {
 	var boolVar bool
 
 	fmt.Println(boolVar)

@@ -1,4 +1,4 @@
-package task
+package main
 
 import "fmt"
 
@@ -16,6 +16,6 @@ const (
 	Sunday
 )
 
-func Constants() {
+func main() {
 	fmt.Println(intConst)
 }
