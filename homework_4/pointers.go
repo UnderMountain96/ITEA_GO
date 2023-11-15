@@ -16,4 +16,14 @@ func main() {
 
 	fmt.Println(myVar, *ptr1, *ptr2)
 
+	//path 2
+	myArr := [...]int{10, 20, 30}
+
+	fmt.Println(myArr)
+
+	ptrArr := &myArr
+
+	ptrArr[1] = 40
+
+	fmt.Println(myArr)
 }
