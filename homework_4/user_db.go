@@ -62,7 +62,7 @@ func listUsers() {
 
 	fmt.Println("List users:\n")
 	for id, name := range users {
-		fmt.Printf("ID: %d, NAME: %s\n", id, name)
+		fmt.Printf("ID: %d,\tNAME: %s\n", id, name)
 	}
 }
 
@@ -127,12 +127,12 @@ func deleteUser() {
 
 func help() {
 	fmt.Println("List of available commands:\n")
-	fmt.Println(CommandList, "   - list users")
-	fmt.Println(CommandCreate, " - create user")
-	fmt.Println(CommandUpdate, " - update user")
-	fmt.Println(CommandDelete, " - delete user")
-	fmt.Println(CommandExit, "   - exit the program ")
-	fmt.Println(CommandHelp, "   - list commands")
+	fmt.Println(CommandList, "\t- list users")
+	fmt.Println(CommandCreate, "\t- create user")
+	fmt.Println(CommandUpdate, "\t- update user")
+	fmt.Println(CommandDelete, "\t- delete user")
+	fmt.Println(CommandExit, "\t- exit the program ")
+	fmt.Println(CommandHelp, "\t- list commands")
 }
 
 func exit() {
