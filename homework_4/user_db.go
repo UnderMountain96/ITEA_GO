@@ -23,10 +23,10 @@ func main() {
 	fmt.Println("Entry command 'help' to get a list commands")
 	fmt.Println("Entry command 'exit' or press Ctrl+C to exit\n")
 
-	commandReader()
+	readCommand()
 }
 
-func commandReader() {
+func readCommand() {
 	for {
 		fmt.Print("Entry command: ")
 		var command string
