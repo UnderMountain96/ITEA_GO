@@ -5,7 +5,16 @@ import (
 	"os"
 )
 
-var users = map[int]string{1: "Petor", 2: "Ivan"}
+const (
+	CommandList   = "list"
+	CommandCreate = "create"
+	CommandUpdate = "update"
+	CommandDelete = "delete"
+	CommandExit   = "exit"
+	CommandHelp   = "help"
+)
+
+var users = map[int]string{}
 
 func main() {
 	printGoLogo()
@@ -24,17 +33,17 @@ func commandReader() {
 	fmt.Println()
 
 	switch command {
-	case "list":
+	case CommandList:
 		listUsers()
-	case "create":
+	case CommandCreate:
 		createUser()
-	case "update":
+	case CommandUpdate:
 		updateUser()
-	case "delete":
+	case CommandDelete:
 		deleteUser()
-	case "exit":
+	case CommandExit:
 		exit()
-	case "help":
+	case CommandHelp:
 		help()
 	default:
 		fmt.Printf("Unknown command '%s', entry command 'help' to get a list commands\n", command)
@@ -118,12 +127,12 @@ func deleteUser() {
 
 func help() {
 	fmt.Println("List of available commands:\n")
-	fmt.Println("list   - list users")
-	fmt.Println("create - create user")
-	fmt.Println("update - update user")
-	fmt.Println("delete - delete user")
-	fmt.Println("exit   - exit the program ")
-	fmt.Println("help   - list commands")
+	fmt.Println(CommandList, "   - list users")
+	fmt.Println(CommandCreate, " - create user")
+	fmt.Println(CommandUpdate, " - update user")
+	fmt.Println(CommandDelete, " - delete user")
+	fmt.Println(CommandExit, "   - exit the program ")
+	fmt.Println(CommandHelp, "   - list commands")
 }
 
 func exit() {
