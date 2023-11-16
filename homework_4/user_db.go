@@ -20,8 +20,8 @@ func main() {
 	printGoLogo()
 	fmt.Println("Welcome to UDBS (User DataBase Shell)\n")
 
-	fmt.Println("Entry command 'help' to get a list commands")
-	fmt.Println("Entry command 'exit' or press Ctrl+C to exit\n")
+	fmt.Printf("Entry command '%s' to get a list commands\n", CommandHelp)
+	fmt.Printf("Entry command '%s' or press Ctrl+C to exit\n\n", CommandExit)
 
 	readCommand()
 }
@@ -47,7 +47,7 @@ func readCommand() {
 		case CommandHelp:
 			help()
 		default:
-			fmt.Printf("Unknown command '%s', entry command 'help' to get a list commands\n", command)
+			fmt.Printf("Unknown command '%s', entry command '%s' to get a list commands\n", command, CommandHelp)
 		}
 
 		fmt.Println()
