@@ -27,31 +27,31 @@ func main() {
 }
 
 func commandReader() {
-	fmt.Print("Entry command: ")
-	var command string
-	fmt.Scan(&command)
-	fmt.Println()
+	for {
+		fmt.Print("Entry command: ")
+		var command string
+		fmt.Scan(&command)
+		fmt.Println()
 
-	switch command {
-	case CommandList:
-		listUsers()
-	case CommandCreate:
-		createUser()
-	case CommandUpdate:
-		updateUser()
-	case CommandDelete:
-		deleteUser()
-	case CommandExit:
-		exit()
-	case CommandHelp:
-		help()
-	default:
-		fmt.Printf("Unknown command '%s', entry command 'help' to get a list commands\n", command)
+		switch command {
+		case CommandList:
+			listUsers()
+		case CommandCreate:
+			createUser()
+		case CommandUpdate:
+			updateUser()
+		case CommandDelete:
+			deleteUser()
+		case CommandExit:
+			exit()
+		case CommandHelp:
+			help()
+		default:
+			fmt.Printf("Unknown command '%s', entry command 'help' to get a list commands\n", command)
+		}
+
+		fmt.Println()
 	}
-
-	fmt.Println()
-
-	commandReader()
 }
 
 func listUsers() {
