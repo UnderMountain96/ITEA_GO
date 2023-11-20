@@ -15,16 +15,25 @@ func NewStudent(name string, surname string) Student {
 	}
 }
 
-func (s Student) FullName() string {
+func (s *Student) FullName() string {
 	return s.Name + " " + s.Surname
 }
 
-func (s Student) AverageScore() float64 {
+func (s *Student) AverageScore() float64 {
 	var sumScore float64
 	for _, l := range s.Lessons {
 		sumScore += l.Score
 	}
+
+	if sumScore == 0 {
+		return 0
+	}
+
 	return sumScore / float64(len(s.Lessons))
+}
+
+func (s *Student) AddLesson(l Lesson) {
+	s.Lessons = append(s.Lessons, l)
 }
 
 type Lesson struct {
@@ -39,14 +48,8 @@ func NewLesson(title string, score float64) Lesson {
 	}
 }
 
-func (s *Student) AddLesson(l Lesson) {
-	s.Lessons = append(s.Lessons, l)
-}
-
-var students []Student
-
 func main() {
-	students = make([]Student, 0)
+	students := make([]Student, 0)
 
 	std1 := NewStudent("Ivan", "Sirko")
 	std1.AddLesson(NewLesson("lesson 1", 4))
