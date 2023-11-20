@@ -3,7 +3,9 @@ package main
 import "fmt"
 
 type StudentTestProvider interface {
-	GetStudentTest() Test
+	AddCorrectAnswer(idx int)
+	Begin()
+	ShowResult()
 }
 
 type StudentTest interface {
@@ -11,12 +13,15 @@ type StudentTest interface {
 }
 
 type Test struct {
+	Title          string
 	Questions      []Question
 	CorrectAnswers []int
 }
 
-func (t *Test) GetStudentTest() {
-	t.Questions = []Question{
+func NewTest() *Test {
+	// TODO: fetch real questions from API
+	title := "Cossack History"
+	questions := []Question{
 		NewQuestion(
 			"When did the term \"Cossack\" first come into use?",
 			map[int]string{
@@ -118,11 +123,46 @@ func (t *Test) GetStudentTest() {
 			4,
 		),
 	}
-	t.CorrectAnswers = make([]int, 0)
+
+	return &Test{
+		Title:     title,
+		Questions: questions,
+	}
 }
 
 func (t *Test) AddCorrectAnswer(idx int) {
 	t.CorrectAnswers = append(t.CorrectAnswers, idx)
+}
+
+func (t *Test) Begin() {
+	fmt.Printf("Test:\t\t%s\n\n", t.Title)
+	for n, question := range t.Questions {
+		questionNumner := n + 1
+
+		fmt.Printf("Question %d:\t%s\n\n", questionNumner, question.Text)
+		for idx, answer := range question.AnswerOptions {
+			fmt.Printf("%d) %s\n", idx, answer)
+		}
+		fmt.Println()
+
+		fmt.Print("Entry your answer: ")
+		var stdAnswer int
+		fmt.Scan(&stdAnswer)
+
+		if stdAnswer == question.CorrectAnswer {
+			t.AddCorrectAnswer(questionNumner)
+		}
+
+		fmt.Println()
+	}
+}
+
+func (t *Test) ShowResult() {
+	NumberCorrectAnswers := len(t.CorrectAnswers)
+	NumberWrongAnswers := len(t.Questions) - NumberCorrectAnswers
+
+	fmt.Printf("Number of correct answers: \t%d\n", NumberCorrectAnswers)
+	fmt.Printf("Number of wrong answers: \t%d\n", NumberWrongAnswers)
 }
 
 type Question struct {
@@ -140,33 +180,18 @@ func NewQuestion(text string, answerOptions map[int]string, correctAnswer int) Q
 }
 
 func main() {
-	test := Test{}
-	test.GetStudentTest()
+	test := NewTest()
 
-	for n, question := range test.Questions {
-		questionNumner := n + 1
-
-		fmt.Printf("Question %d:\t%s\n\n", questionNumner, question.Text)
-		for idx, answer := range question.AnswerOptions {
-			fmt.Printf("%d) %s\n", idx, answer)
-		}
-		fmt.Println()
-
-		fmt.Print("Entry your answer: ")
-		var stdAnswer int
-		fmt.Scan(&stdAnswer)
-
-		if stdAnswer == question.CorrectAnswer {
-			test.AddCorrectAnswer(questionNumner)
-		}
-
-		fmt.Println()
+	tests := []StudentTest{
+		test,
 	}
 
-	NumberCorrectAnswers := len(test.CorrectAnswers)
-	NumberWrongAnswers := len(test.Questions) - NumberCorrectAnswers
+	runTests(tests...)
+}
 
-	fmt.Printf("Number of correct answers: \t%d\n", NumberCorrectAnswers)
-	fmt.Printf("Number of wrong answers: \t%d\n", NumberWrongAnswers)
-
+func runTests(st ...StudentTest) {
+	for _, t := range st {
+		t.Begin()
+		t.ShowResult()
+	}
 }
