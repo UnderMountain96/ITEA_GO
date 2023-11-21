@@ -2,15 +2,15 @@ package main
 
 import "fmt"
 
-type StudentTestProvider interface {
+type StudentTest interface {
 	GetCorrectAnswerCount() int
 	GetWrongAnswerCount() int
+	AddCorrectAnswer(idx int)
 }
 
-type StudentTest interface {
+type StudentTestProvider interface {
 	GetTitle() string
 	GetQuestions() []Question
-	AddCorrectAnswer(idx int)
 }
 
 type Test struct {
@@ -172,14 +172,14 @@ func NewQuestion(text string, answerOptions map[int]string, correctAnswer int) Q
 func main() {
 	test := NewTest()
 
-	beginTest(test)
+	beginTest(test, addCorrectAnswer(test))
 
 	showResult(test)
 }
 
-func beginTest(st StudentTest) {
-	fmt.Printf("Test:\t\t%s\n\n", st.GetTitle())
-	for n, question := range st.GetQuestions() {
+func beginTest(stp StudentTestProvider, addCorrectAnswer func(int)) {
+	fmt.Printf("Test:\t\t%s\n\n", stp.GetTitle())
+	for n, question := range stp.GetQuestions() {
 		questionNumner := n + 1
 
 		fmt.Printf("Question %d:\t%s\n\n", questionNumner, question.Text)
@@ -193,15 +193,20 @@ func beginTest(st StudentTest) {
 		fmt.Scan(&stdAnswer)
 
 		if question.IsCorrectAnswer(stdAnswer) {
-			st.AddCorrectAnswer(questionNumner)
+			addCorrectAnswer(questionNumner)
 		}
 
 		fmt.Println()
 	}
 }
 
-func showResult(stp StudentTestProvider) {
-	fmt.Printf("Number of correct answers: \t%d\n", stp.GetCorrectAnswerCount())
-	fmt.Printf("Number of wrong answers: \t%d\n", stp.GetWrongAnswerCount())
+func addCorrectAnswer(st StudentTest) func(int) {
+	return func(idx int) {
+		st.AddCorrectAnswer(idx)
+	}
+}
 
+func showResult(st StudentTest) {
+	fmt.Printf("Number of correct answers: \t%d\n", st.GetCorrectAnswerCount())
+	fmt.Printf("Number of wrong answers: \t%d\n", st.GetWrongAnswerCount())
 }
