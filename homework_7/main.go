@@ -2,14 +2,17 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"os"
 
+	_ "github.com/jackc/pgx/v5/stdlib"
+
 	"github.com/UnderMountain96/ITEA_GO/student_testing/dotenv"
 	"github.com/UnderMountain96/ITEA_GO/student_testing/model"
+	"github.com/UnderMountain96/ITEA_GO/student_testing/store/sqlstore"
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5"
 )
 
 type StudentTest interface {
@@ -21,13 +24,48 @@ type StudentTest interface {
 type StudentTestProvider interface {
 	GetTitle() string
 	GetQuestions() []model.Question
+	SetQuestions([]model.Question)
 }
 
 func main() {
-	loadEnv()
+	const envFilePath = "./.env"
+	loadEnv(envFilePath)
+
+	db, err := newDB()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	dbStore := sqlstore.NewStore(db)
 
 	ctx := context.Background()
 
+	res, err := dbStore.Test().GetAll(ctx)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(res[0].GetID())
+
+	res2, err := dbStore.Test().GetQuestions(ctx, res[0].GetID())
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(res2)
+	res[0].SetQuestions(res2)
+	// id, err := showAvailableTests(availableTests)
+
+	// beginTest(test, addCorrectAnswer(test))
+
+	// showResult(test)
+}
+
+func newDB() (*sql.DB, error) {
 	connStr := makeConnectString(
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASSWORD"),
@@ -35,35 +73,16 @@ func main() {
 		os.Getenv("DB_PORT"),
 		os.Getenv("DB_NAME"),
 	)
-	fmt.Println(connStr)
-	conn, err := pgx.Connect(ctx, connStr)
+	db, err := sql.Open("pgx", connStr)
 	if err != nil {
-		panic(err)
-	}
-	defer conn.Close(ctx)
-
-	rows, err := conn.Query(ctx, "SELECT id, title FROM test")
-	if err != nil {
-		fmt.Printf("Query error: %s\n", err)
+		return nil, fmt.Errorf("newDB: failed to open database: %w", err)
 	}
 
-	availableTests := make([]model.Test, 0)
-
-	for rows.Next() {
-		var id, title string
-		if err := rows.Scan(&id, &title); err != nil {
-			fmt.Printf("Scan error: %s\n", err)
-		}
-		t := model.NewTest(uuid.MustParse(id), title, []model.Question{})
-
-		availableTests = append(availableTests, t)
+	if err := db.Ping(); err != nil {
+		return nil, fmt.Errorf("newDB: failed to ping database: %w", err)
 	}
 
-	showAvailableTests(availableTests)
-
-	// beginTest(test, addCorrectAnswer(test))
-
-	// showResult(test)
+	return db, nil
 }
 
 func showAvailableTests(tests []model.Test) (uuid.UUID, error) {
@@ -85,9 +104,7 @@ func showAvailableTests(tests []model.Test) (uuid.UUID, error) {
 	return selected.GetID(), nil
 }
 
-func loadEnv() {
-	const envFilePath = "./.env"
-
+func loadEnv(envFilePath string) {
 	err := dotenv.LoadEnv(envFilePath)
 
 	if errors.Is(err, os.ErrNotExist) {
