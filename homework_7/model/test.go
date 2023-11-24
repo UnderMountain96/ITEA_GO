@@ -9,17 +9,6 @@ type Test struct {
 	correctAnswers []uuid.UUID
 }
 
-<<<<<<< HEAD
-func NewTest(id uuid.UUID, title string, questions []Question) Test {
-	// TODO: fetch real questions from API
-	return Test{
-		id:        id,
-		title:     title,
-		questions: questions,
-	}
-}
-
-=======
 func NewTest(id uuid.UUID, title string) Test {
 	// TODO: fetch real questions from API
 	return Test{
@@ -32,7 +21,6 @@ func (t *Test) SetQuestions(questions []Question) {
 	t.questions = questions
 }
 
->>>>>>> 2e2796c (add sql store)
 func (t *Test) GetID() uuid.UUID {
 	return t.id
 }
