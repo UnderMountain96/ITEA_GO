@@ -21,3 +21,5 @@ Code from homeworks of Golang course in IT Education Academy.
 5. [Homework 6](homework_6/)
    1. [Order](homework_6/order.go)
    2. [User DB V2](homework_6/user_db_v2.go)
+6. [Homework 7](homework_7/)
+   1. [Student Testing V2](homework_7/main.go)
