@@ -10,7 +10,6 @@ type Test struct {
 }
 
 func NewTest(id uuid.UUID, title string) *Test {
-	// TODO: fetch real questions from API
 	return &Test{
 		id:    id,
 		title: title,
