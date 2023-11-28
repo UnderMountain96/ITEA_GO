@@ -18,13 +18,13 @@ import (
 type StudentTest interface {
 	GetCorrectAnswerCount() int
 	GetWrongAnswerCount() int
-	AddCorrectAnswer(id uuid.UUID)
+	AddCorrectAnswer(uuid.UUID)
 }
 
 type StudentTestProvider interface {
 	GetTitle() string
-	GetQuestions() []model.Question
-	SetQuestions([]model.Question)
+	GetQuestions() []*model.Question
+	SetQuestions([]*model.Question)
 }
 
 func main() {
@@ -41,28 +41,32 @@ func main() {
 
 	ctx := context.Background()
 
-	res, err := dbStore.Test().GetAll(ctx)
-
+	availableTests, err := dbStore.Test().GetAll(ctx)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	fmt.Println(res[0].GetID())
-
-	res2, err := dbStore.Test().GetQuestions(ctx, res[0].GetID())
-
+	test, err := showAvailableTests(availableTests)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(res2)
-	res[0].SetQuestions(res2)
-	// id, err := showAvailableTests(availableTests)
 
-	// beginTest(test, addCorrectAnswer(test))
+	questions, err := dbStore.Test().GetQuestions(ctx, test.GetID())
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
-	// showResult(test)
+	test.SetQuestions(questions)
+
+	if err := beginTest(test, addCorrectAnswer(test)); err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	showResult(test)
 }
 
 func newDB() (*sql.DB, error) {
@@ -85,7 +89,7 @@ func newDB() (*sql.DB, error) {
 	return db, nil
 }
 
-func showAvailableTests(tests []model.Test) (uuid.UUID, error) {
+func showAvailableTests(tests []*model.Test) (*model.Test, error) {
 	for idx, t := range tests {
 		fmt.Printf("%d) %s.\n", idx+1, t.GetTitle())
 	}
@@ -94,14 +98,14 @@ func showAvailableTests(tests []model.Test) (uuid.UUID, error) {
 	var testNum int
 	_, err := fmt.Scan(&testNum)
 	if err != nil {
-		return uuid.UUID{}, fmt.Errorf("showAvailableTests: invalid number test value entered: %w", err)
+		return &model.Test{}, fmt.Errorf("showAvailableTests: invalid number test value entered: %w", err)
 	}
 
-	selected := tests[testNum-1]
+	test := tests[testNum-1]
 
-	fmt.Printf("%s\n", selected.GetTitle())
+	fmt.Printf("%s\n", test.GetTitle())
 
-	return selected.GetID(), nil
+	return test, nil
 }
 
 func loadEnv(envFilePath string) {
@@ -124,27 +128,35 @@ func makeConnectString(user, pass, host, port, db_name string) string {
 	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s", user, pass, host, port, db_name)
 }
 
-func beginTest(stp StudentTestProvider, addCorrectAnswer func(int)) {
+func beginTest(stp StudentTestProvider, addCorrectAnswer func(uuid.UUID)) error {
 	fmt.Printf("Test:\t\t%s\n\n", stp.GetTitle())
-	// for n, question := range stp.GetQuestions() {
-	// 	questionNumner := n + 1
+	for n, question := range stp.GetQuestions() {
 
-	// 	fmt.Printf("Question %d:\t%s\n\n", questionNumner, question.Text)
-	// 	for idx, answer := range question.AnswerOptions {
-	// 		fmt.Printf("%d) %s\n", idx, answer)
-	// 	}
-	// 	fmt.Println()
+		fmt.Printf("Question %d:\t%s\n\n", n+1, question.GetText())
+		a := []uuid.UUID{}
+		n := 1
+		for id, answer := range question.GetAnswerOptions() {
+			fmt.Printf("%d) %s\n", n, answer)
+			a = append(a, id)
+			n++
+		}
+		fmt.Println()
 
-	// 	fmt.Print("Entry your answer: ")
-	// 	var stdAnswer int
-	// 	fmt.Scan(&stdAnswer)
+		fmt.Print("Entry your answer: ")
+		var stdAnswer int
+		_, err := fmt.Scan(&stdAnswer)
+		if err != nil {
+			return fmt.Errorf("beginTest: invalid command value entered: %w", err)
+		}
 
-	// 	if question.IsCorrectAnswer(stdAnswer) {
-	// 		addCorrectAnswer(questionNumner)
-	// 	}
+		if question.IsCorrectAnswer(a[stdAnswer]) {
+			addCorrectAnswer(a[stdAnswer])
+		}
 
-	// 	fmt.Println()
-	// }
+		fmt.Println()
+	}
+
+	return nil
 }
 
 func addCorrectAnswer(st StudentTest) func(uuid.UUID) {

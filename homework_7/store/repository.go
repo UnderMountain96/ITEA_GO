@@ -8,6 +8,6 @@ import (
 )
 
 type TestRepository interface {
-	GetAll(ctx context.Context) ([]model.Test, error)
-	GetQuestions(ctx context.Context, id uuid.UUID) ([]model.Question, error)
+	GetAll(ctx context.Context) ([]*model.Test, error)
+	GetQuestions(ctx context.Context, id uuid.UUID) ([]*model.Question, error)
 }

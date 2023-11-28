@@ -14,7 +14,7 @@ type TestRepository struct {
 	store *Store
 }
 
-func (r *TestRepository) GetAll(ctx context.Context) ([]model.Test, error) {
+func (r *TestRepository) GetAll(ctx context.Context) ([]*model.Test, error) {
 	conn, err := r.store.db.Conn(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("GetAll: connect error: %w", err)
@@ -26,7 +26,7 @@ func (r *TestRepository) GetAll(ctx context.Context) ([]model.Test, error) {
 		return nil, fmt.Errorf("GetAll: query error: %w", err)
 	}
 
-	availableTests := make([]model.Test, 0)
+	availableTests := make([]*model.Test, 0)
 
 	for rows.Next() {
 		var id, title string
@@ -41,7 +41,7 @@ func (r *TestRepository) GetAll(ctx context.Context) ([]model.Test, error) {
 	return availableTests, nil
 }
 
-func (r *TestRepository) GetQuestions(ctx context.Context, id uuid.UUID) ([]model.Question, error) {
+func (r *TestRepository) GetQuestions(ctx context.Context, id uuid.UUID) ([]*model.Question, error) {
 	conn, err := r.store.db.Conn(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("GetQuestions: connect error: %w", err)
@@ -53,7 +53,7 @@ func (r *TestRepository) GetQuestions(ctx context.Context, id uuid.UUID) ([]mode
 		return nil, fmt.Errorf("GetQuestions: query error: %w", err)
 	}
 
-	questions := make([]model.Question, 0)
+	questions := make([]*model.Question, 0)
 
 	for rows.Next() {
 		var id, title, correct_answer_id string

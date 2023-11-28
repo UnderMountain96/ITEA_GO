@@ -5,19 +5,19 @@ import "github.com/google/uuid"
 type Test struct {
 	id             uuid.UUID
 	title          string
-	questions      []Question
+	questions      []*Question
 	correctAnswers []uuid.UUID
 }
 
-func NewTest(id uuid.UUID, title string) Test {
+func NewTest(id uuid.UUID, title string) *Test {
 	// TODO: fetch real questions from API
-	return Test{
+	return &Test{
 		id:    id,
 		title: title,
 	}
 }
 
-func (t *Test) SetQuestions(questions []Question) {
+func (t *Test) SetQuestions(questions []*Question) {
 	t.questions = questions
 }
 
@@ -29,7 +29,7 @@ func (t *Test) GetTitle() string {
 	return t.title
 }
 
-func (t *Test) GetQuestions() []Question {
+func (t *Test) GetQuestions() []*Question {
 	return t.questions
 }
 
