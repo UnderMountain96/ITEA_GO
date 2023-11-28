@@ -44,7 +44,16 @@ type Order struct {
 	updatedAt Time
 }
 
-func (o *Order) StatusIsProcessing() bool {
+func newOrder(customer Customer, date Time) Order {
+	return Order{
+		customer:  customer,
+		status:    initiatedStatus,
+		createdAt: date,
+		updatedAt: date,
+	}
+}
+
+func (o *Order) IsProcessing() bool {
 	return o.status == processingStatus
 }
 
@@ -52,17 +61,17 @@ func (o *Order) statusChangeNotification() {
 	fmt.Printf("Status changed to %q at %s\n", o.status, o.updatedAt)
 }
 
-func (o *Order) SetProcessingStatus() error {
+func (o *Order) SetProcessingStatus(date Time) error {
 	o.status = processingStatus
-	o.updatedAt = Time{time.Now().Add(6 * time.Hour)}
+	o.updatedAt = date
 
 	o.statusChangeNotification()
 
 	return nil
 }
 
-func (o *Order) SetSuccessStatus() error {
-	if !o.StatusIsProcessing() {
+func (o *Order) SetSuccessStatus(date Time) error {
+	if !o.IsProcessing() {
 		return fmt.Errorf(
 			"SetSuccessStatus: cannot change status %q to %q, %w",
 			o.status,
@@ -72,15 +81,15 @@ func (o *Order) SetSuccessStatus() error {
 	}
 
 	o.status = successStatus
-	o.updatedAt = Time{time.Now().Add(12 * time.Hour)}
+	o.updatedAt = date
 
 	o.statusChangeNotification()
 
 	return nil
 }
 
-func (o *Order) SetFailStatus() error {
-	if !o.StatusIsProcessing() {
+func (o *Order) SetFailStatus(date Time) error {
+	if !o.IsProcessing() {
 		return fmt.Errorf(
 			"SetFailStatus: cannot change status %q to %q, %w",
 			o.status,
@@ -90,7 +99,7 @@ func (o *Order) SetFailStatus() error {
 	}
 
 	o.status = failStatus
-	o.updatedAt = Time{time.Now().Add(12 * time.Hour)}
+	o.updatedAt = date
 
 	o.statusChangeNotification()
 
@@ -106,21 +115,12 @@ func (o *Order) ShowInfoByOrder() {
 	fmt.Println()
 }
 
-func newOrder(customer Customer) Order {
-	timeNow := Time{time.Now()}
-	return Order{
-		customer:  customer,
-		status:    initiatedStatus,
-		createdAt: timeNow,
-		updatedAt: timeNow,
-	}
-}
-
 func main() {
+	timeNow := Time{time.Now()}
 	orders := []Order{
-		newOrder(newCustomer("Erik_Swift@example.com")),
-		newOrder(newCustomer("Olaf_Stout@example.com")),
-		newOrder(newCustomer("Baleog_Fierce@example.com")),
+		newOrder(newCustomer("Erik_Swift@example.com"), timeNow),
+		newOrder(newCustomer("Olaf_Stout@example.com"), timeNow),
+		newOrder(newCustomer("Baleog_Fierce@example.com"), timeNow),
 	}
 
 	for n, o := range orders {
@@ -133,32 +133,32 @@ func makeOrder(n int, o Order) {
 
 	switch n {
 	case 0:
-		if err := o.SetSuccessStatus(); err != nil {
+		if err := o.SetSuccessStatus(Time{time.Now().Add(12 * time.Hour)}); err != nil {
 			fmt.Printf("Failed change status: %s\n", err)
 			return
 		}
 	case 1:
-		if err := o.SetProcessingStatus(); err != nil {
+		if err := o.SetProcessingStatus(Time{time.Now().Add(6 * time.Hour)}); err != nil {
 			fmt.Printf("Failed change status: %s\n", err)
 			return
 		}
 
-		if err := o.SetFailStatus(); err != nil {
+		if err := o.SetFailStatus(Time{time.Now().Add(12 * time.Hour)}); err != nil {
 			fmt.Printf("Failed change status: %s\n", err)
 			return
 		}
 
-		if err := o.SetSuccessStatus(); err != nil {
+		if err := o.SetSuccessStatus(Time{time.Now().Add(12 * time.Hour)}); err != nil {
 			fmt.Printf("Failed change status: %s\n", err)
 			return
 		}
 	default:
-		if err := o.SetProcessingStatus(); err != nil {
+		if err := o.SetProcessingStatus(Time{time.Now().Add(6 * time.Hour)}); err != nil {
 			fmt.Printf("Failed change status: %s\n", err)
 			return
 		}
 
-		if err := o.SetSuccessStatus(); err != nil {
+		if err := o.SetSuccessStatus(Time{time.Now().Add(12 * time.Hour)}); err != nil {
 			fmt.Printf("Failed change status: %s\n", err)
 			return
 		}
