@@ -16,6 +16,10 @@ func NewTest(id uuid.UUID, title string) *Test {
 	}
 }
 
+func (t *Test) GetTest() *Test {
+	return t
+}
+
 func (t *Test) SetQuestions(questions []*Question) {
 	t.questions = questions
 }

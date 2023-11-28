@@ -10,22 +10,10 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 
 	"github.com/UnderMountain96/ITEA_GO/student_testing/dotenv"
-	"github.com/UnderMountain96/ITEA_GO/student_testing/model"
+	service "github.com/UnderMountain96/ITEA_GO/student_testing/sercive"
 	"github.com/UnderMountain96/ITEA_GO/student_testing/store/sqlstore"
 	"github.com/google/uuid"
 )
-
-type StudentTest interface {
-	GetCorrectAnswerCount() int
-	GetWrongAnswerCount() int
-	AddCorrectAnswer(uuid.UUID)
-}
-
-type StudentTestProvider interface {
-	GetTitle() string
-	GetQuestions() []*model.Question
-	SetQuestions([]*model.Question)
-}
 
 func main() {
 	const envFilePath = "./.env"
@@ -47,7 +35,13 @@ func main() {
 		return
 	}
 
-	test, err := showAvailableTests(availableTests)
+	studentTestProvider := []service.StudentTestProvider{}
+
+	for _, t := range availableTests {
+		studentTestProvider = append(studentTestProvider, t)
+	}
+
+	test, err := service.ShowAvailableTests(studentTestProvider...)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -61,12 +55,18 @@ func main() {
 
 	test.SetQuestions(questions)
 
-	if err := beginTest(test, addCorrectAnswer(test)); err != nil {
+	if err := service.BeginTest(test, addCorrectAnswer(test)); err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	showResult(test)
+	service.ShowResult(test)
+}
+
+func addCorrectAnswer(st service.StudentTest) func(uuid.UUID) {
+	return func(id uuid.UUID) {
+		st.AddCorrectAnswer(id)
+	}
 }
 
 func loadEnv(envFilePath string) {
