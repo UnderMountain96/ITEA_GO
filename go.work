@@ -1,0 +1,6 @@
+go 1.21.4
+
+use (
+	./homework_7
+	./homework_8
+)
