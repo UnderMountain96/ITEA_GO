@@ -2,8 +2,10 @@ package model
 
 import (
 	"errors"
-	"github.com/google/uuid"
+	"fmt"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type Article struct {
@@ -33,4 +35,12 @@ func (a *Article) Publish() error {
 	a.UpdatedAt = time.Now()
 
 	return nil
+}
+
+func (a *Article) ShowInfo() {
+	fmt.Printf("Id: \t\t%s\n", a.Id)
+	fmt.Printf("Title: \t\t%s\n", a.Title)
+	fmt.Printf("CreatedAt: \t%s\n", a.CreatedAt.Format("02.01.2006 15:04:05"))
+	fmt.Printf("UpdatedAt: \t%s\n", a.UpdatedAt.Format("02.01.2006 15:04:05"))
+	fmt.Println()
 }

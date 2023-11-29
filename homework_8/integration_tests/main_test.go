@@ -2,11 +2,12 @@ package main
 
 import (
 	"context"
+	"testing"
+
 	"github.com/cucumber/godog"
 	"github.com/greeflas/itea_golang/cmd"
 	"github.com/greeflas/itea_golang/repository"
 	"github.com/jackc/pgx/v5"
-	"testing"
 )
 
 func TestFeatures(t *testing.T) {
@@ -21,7 +22,8 @@ func TestFeatures(t *testing.T) {
 
 	articleRepository := repository.NewArticleRepository(conn)
 	createArticleCommand := cmd.NewCreateArticleCommand(articleRepository)
-	commandRegistry := cmd.NewRegistry(createArticleCommand)
+	getAllArticleCommand := cmd.NewGetAllArticleCommand(articleRepository)
+	commandRegistry := cmd.NewRegistry(createArticleCommand, getAllArticleCommand)
 
 	suite := godog.TestSuite{
 		Name: "Articles agency",
