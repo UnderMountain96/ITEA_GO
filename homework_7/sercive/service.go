@@ -29,13 +29,13 @@ func ShowAvailableTests(stp ...StudentTestProvider) (*model.Test, error) {
 	var testNum int
 	_, err := fmt.Scan(&testNum)
 	if err != nil {
-		return &model.Test{}, fmt.Errorf("showAvailableTests: invalid number test value entered: %w", err)
+		return &model.Test{}, fmt.Errorf("ShowAvailableTests: invalid number test value entered: %w", err)
 	}
 
 	idx := testNum - 1
 
 	if len(stp)-1 < idx {
-		return &model.Test{}, fmt.Errorf("showAvailableTests: invalid number test value entered: index out of range [%d] with length %d", len(stp), testNum)
+		return &model.Test{}, fmt.Errorf("ShowAvailableTests: invalid number test value entered: index out of range [%d] with length %d", len(stp), testNum)
 	}
 
 	test := stp[idx]
