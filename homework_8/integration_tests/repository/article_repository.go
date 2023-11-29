@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/greeflas/itea_golang/model"
 	"github.com/jackc/pgx/v5"
 )
@@ -35,25 +36,28 @@ VALUES ($1, $2, $3, $4, $5)
 	return err
 }
 
-func (r *ArticleRepository) Get(ctx context.Context, a *model.Article) error {
-	sql := `SELECT title, body, created_at, updated_at FROM articles WHERE id = $1`
+func (r *ArticleRepository) Get(ctx context.Context, id uuid.UUID) (*model.Article, error) {
+	sql := `SELECT id, title, body, created_at, updated_at FROM articles WHERE id = $1`
 
 	row := r.conn.QueryRow(
 		ctx,
 		sql,
-		a.Id,
+		id,
 	)
 
+	a := &model.Article{}
+
 	if err := row.Scan(
+		&a.Id,
 		&a.Title,
 		&a.Body,
 		&a.CreatedAt,
 		&a.UpdatedAt,
 	); err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return a, nil
 }
 
 func (r *ArticleRepository) GetAll(ctx context.Context) ([]*model.Article, error) {
@@ -95,6 +99,18 @@ func (r *ArticleRepository) Update(ctx context.Context, a *model.Article) error 
 		a.Title,
 		a.Body,
 		time.Now(),
+	)
+
+	return err
+}
+
+func (r *ArticleRepository) Delete(ctx context.Context, id uuid.UUID) error {
+	sql := `DELETE FROM articles WHERE id = $1`
+
+	_, err := r.conn.Exec(
+		ctx,
+		sql,
+		id,
 	)
 
 	return err

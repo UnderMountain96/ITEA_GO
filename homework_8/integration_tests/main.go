@@ -23,7 +23,8 @@ func main() {
 	createArticleCommand := cmd.NewCreateArticleCommand(articleRepository)
 	getAllArticleCommand := cmd.NewGetAllArticleCommand(articleRepository)
 	updateArticleCommand := cmd.NewUpdateArticleCommand(articleRepository)
-	commandRegistry := cmd.NewRegistry(createArticleCommand, getAllArticleCommand, updateArticleCommand)
+	deleteArticleCommand := cmd.NewDeleteArticleCommand(articleRepository)
+	commandRegistry := cmd.NewRegistry(createArticleCommand, getAllArticleCommand, updateArticleCommand, deleteArticleCommand)
 
 	cmdName := os.Args[1]
 	command := commandRegistry.FindCommand(cmdName)
