@@ -2,5 +2,5 @@ go 1.21.4
 
 use (
 	./homework_7
-	./homework_8
+	./homework_8/unit_tests
 )
