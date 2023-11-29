@@ -7,13 +7,12 @@ import (
 	"os"
 
 	"github.com/google/uuid"
-	"github.com/greeflas/itea_golang/model"
 	"github.com/greeflas/itea_golang/repository"
 )
 
 const (
 	usageTitle = "New actical title"
-	usageBody  = "New actical title"
+	usageBody  = "New actical body"
 )
 
 type UpdateArticleCommand struct {
@@ -51,10 +50,8 @@ func (c *UpdateArticleCommand) Run(ctx context.Context) error {
 		return err
 	}
 
-	a := &model.Article{
-		Id: id,
-	}
-	if err := c.articleRepository.Get(ctx, a); err != nil {
+	a, err := c.articleRepository.Get(ctx, id)
+	if err != nil {
 		return err
 	}
 
