@@ -58,10 +58,7 @@ func TestFullName(t *testing.T) {
 	expectedSurname := "Bohun"
 	expectedFullName := expectedName + " " + expectedSurname
 
-	student, err := NewStudent(expectedName, expectedSurname)
-	if err != nil {
-		t.Errorf("cannot create new student: %s", err)
-	}
+	student, _ := NewStudent(expectedName, expectedSurname)
 
 	if student.FullName() != expectedFullName {
 		t.Errorf("invalid FullName: got: %s, want: %s", student.FullName(), expectedFullName)
@@ -72,10 +69,7 @@ func TestAddLesson(t *testing.T) {
 	expectedName := "Ivan"
 	expectedSurname := "Bohun"
 
-	student, err := NewStudent(expectedName, expectedSurname)
-	if err != nil {
-		t.Errorf("cannot create new student: %s", err)
-	}
+	student, _ := NewStudent(expectedName, expectedSurname)
 
 	if len(student.Lessons) != 0 {
 		t.Error("Lessons must be empty")
@@ -98,10 +92,7 @@ func TestAverageScore(t *testing.T) {
 	expectedName := "Ivan"
 	expectedSurname := "Bohun"
 
-	student, err := NewStudent(expectedName, expectedSurname)
-	if err != nil {
-		t.Errorf("cannot create new student: %s", err)
-	}
+	student, _ := NewStudent(expectedName, expectedSurname)
 
 	count := 5
 	score := 5.0
