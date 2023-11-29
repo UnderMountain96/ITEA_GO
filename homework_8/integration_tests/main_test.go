@@ -23,7 +23,8 @@ func TestFeatures(t *testing.T) {
 	articleRepository := repository.NewArticleRepository(conn)
 	createArticleCommand := cmd.NewCreateArticleCommand(articleRepository)
 	getAllArticleCommand := cmd.NewGetAllArticleCommand(articleRepository)
-	commandRegistry := cmd.NewRegistry(createArticleCommand, getAllArticleCommand)
+	updateArticleCommand := cmd.NewUpdateArticleCommand(articleRepository)
+	commandRegistry := cmd.NewRegistry(createArticleCommand, getAllArticleCommand, updateArticleCommand)
 
 	suite := godog.TestSuite{
 		Name: "Articles agency",

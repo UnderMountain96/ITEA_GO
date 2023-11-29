@@ -36,33 +36,24 @@ VALUES ($1, $2, $3, $4, $5)
 }
 
 func (r *ArticleRepository) Get(ctx context.Context, a *model.Article) error {
-	sql := `SELECT id, title, body, created_at, updated_at FROM articles id = $1`
+	sql := `SELECT title, body, created_at, updated_at FROM articles WHERE id = $1`
 
-	rows, err := r.conn.Query(
+	row := r.conn.QueryRow(
 		ctx,
 		sql,
-a.Id
+		a.Id,
 	)
 
-	if err != nil {
-		return nil, err
+	if err := row.Scan(
+		&a.Title,
+		&a.Body,
+		&a.CreatedAt,
+		&a.UpdatedAt,
+	); err != nil {
+		return err
 	}
 
-	acticals := make([]*model.Article, 0)
-
-	for rows.Next() {
-		a := &model.Article{}
-		rows.Scan(
-			&a.Id,
-			&a.Title,
-			&a.Body,
-			&a.CreatedAt,
-			&a.UpdatedAt,
-		)
-		acticals = append(acticals, a)
-	}
-
-	return acticals, err
+	return nil
 }
 
 func (r *ArticleRepository) GetAll(ctx context.Context) ([]*model.Article, error) {
@@ -95,7 +86,7 @@ func (r *ArticleRepository) GetAll(ctx context.Context) ([]*model.Article, error
 }
 
 func (r *ArticleRepository) Update(ctx context.Context, a *model.Article) error {
-	sql := `UPDATE articles SET title = $2 body = $3, updated_at = $4 WHERE id = $1`
+	sql := `UPDATE articles SET title = $2, body = $3, updated_at = $4 WHERE id = $1`
 
 	_, err := r.conn.Exec(
 		ctx,
