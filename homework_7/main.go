@@ -10,44 +10,52 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 
 	"github.com/UnderMountain96/ITEA_GO/student_testing/dotenv"
-	service "github.com/UnderMountain96/ITEA_GO/student_testing/sercive"
-	"github.com/UnderMountain96/ITEA_GO/student_testing/store/sqlstore"
-	"github.com/google/uuid"
+	"github.com/UnderMountain96/ITEA_GO/student_testing/service"
+	"github.com/UnderMountain96/ITEA_GO/student_testing/store"
 )
 
 func main() {
 	const envFilePath = "./.env"
-	loadEnv(envFilePath)
+	if err := loadEnv(envFilePath); err != nil {
+		panic(err)
+	}
 
 	db, err := newDB()
 	if err != nil {
-		fmt.Println(err)
-		return
+		panic(err)
 	}
-
-	dbStore := sqlstore.NewStore(db)
 
 	ctx := context.Background()
 
-	availableTests, err := dbStore.Test().GetAll(ctx)
+	conn, err := db.Conn(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	defer conn.Close()
+
+	testRepository := store.NewTestRepository(conn)
+	questionRepository := store.NewQuestionRepository(conn)
+
+	availableTests, err := testRepository.GetAll(ctx)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	studentTestProvider := []service.StudentTestProvider{}
+	testRetriever := []service.TestRetriever{}
 
 	for _, t := range availableTests {
-		studentTestProvider = append(studentTestProvider, t)
+		testRetriever = append(testRetriever, t)
 	}
 
-	test, err := service.ShowAvailableTests(studentTestProvider...)
+	test, err := service.ShowAvailableTests(testRetriever...)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	questions, err := dbStore.Test().GetQuestions(ctx, test.GetID())
+	questions, err := questionRepository.Get(ctx, test.GetID())
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -55,7 +63,7 @@ func main() {
 
 	test.SetQuestions(questions)
 
-	if err := service.BeginTest(test, addCorrectAnswer(test)); err != nil {
+	if err := service.BeginTest(test); err != nil {
 		fmt.Println(err)
 		return
 	}
@@ -63,24 +71,19 @@ func main() {
 	service.ShowResult(test)
 }
 
-func addCorrectAnswer(st service.StudentTest) func(uuid.UUID) {
-	return func(id uuid.UUID) {
-		st.AddCorrectAnswer(id)
-	}
-}
-
-func loadEnv(envFilePath string) {
+func loadEnv(envFilePath string) error {
 	err := dotenv.LoadEnv(envFilePath)
 
 	if errors.Is(err, os.ErrNotExist) {
-		fmt.Printf("Oops, looks like file %q does not exist. You need to create it.\n", envFilePath)
-		return
+		return fmt.Errorf("oops, looks like file %q does not exist. You need to create it", envFilePath)
+
 	}
 
 	if err != nil {
-		fmt.Printf("Fatal error: %s\n", err)
-		return
+		return fmt.Errorf("fatal error: %s", err)
 	}
+
+	return nil
 }
 
 func newDB() (*sql.DB, error) {

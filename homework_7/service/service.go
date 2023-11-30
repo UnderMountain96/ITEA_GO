@@ -7,6 +7,16 @@ import (
 	"github.com/google/uuid"
 )
 
+type TestRetriever interface {
+	GetTest() *model.Test
+	GetTitle() string
+}
+
+type QuestionManager interface {
+	GetQuestions() []*model.Question
+	SetQuestions(questions []*model.Question)
+}
+
 type StudentTest interface {
 	GetCorrectAnswerCount() int
 	GetWrongAnswerCount() int
@@ -14,14 +24,13 @@ type StudentTest interface {
 }
 
 type StudentTestProvider interface {
-	GetTest() *model.Test
-	GetTitle() string
-	GetQuestions() []*model.Question
-	SetQuestions([]*model.Question)
+	TestRetriever
+	QuestionManager
+	StudentTest
 }
 
-func ShowAvailableTests(stp ...StudentTestProvider) (*model.Test, error) {
-	for idx, t := range stp {
+func ShowAvailableTests(tr ...TestRetriever) (*model.Test, error) {
+	for idx, t := range tr {
 		fmt.Printf("%d) %s.\n", idx+1, t.GetTitle())
 	}
 
@@ -29,21 +38,21 @@ func ShowAvailableTests(stp ...StudentTestProvider) (*model.Test, error) {
 	var testNum int
 	_, err := fmt.Scan(&testNum)
 	if err != nil {
-		return &model.Test{}, fmt.Errorf("ShowAvailableTests: invalid number test value entered: %w", err)
+		return nil, fmt.Errorf("ShowAvailableTests: invalid number test value entered: %w", err)
 	}
 
 	idx := testNum - 1
 
-	if len(stp)-1 < idx {
-		return &model.Test{}, fmt.Errorf("ShowAvailableTests: invalid number test value entered: index out of range [%d] with length %d", len(stp), testNum)
+	if len(tr)-1 < idx {
+		return nil, fmt.Errorf("ShowAvailableTests: invalid number test value entered: index out of range [%d] with length %d", len(tr), testNum)
 	}
 
-	test := stp[idx]
+	test := tr[idx]
 
 	return test.GetTest(), nil
 }
 
-func BeginTest(stp StudentTestProvider, addCorrectAnswer func(uuid.UUID)) error {
+func BeginTest(stp StudentTestProvider) error {
 	fmt.Printf("Test:\t\t%s\n\n", stp.GetTitle())
 	for n, question := range stp.GetQuestions() {
 
@@ -72,7 +81,7 @@ func BeginTest(stp StudentTestProvider, addCorrectAnswer func(uuid.UUID)) error 
 		}
 
 		if question.IsCorrectAnswer(a[idx]) {
-			addCorrectAnswer(a[idx])
+			stp.AddCorrectAnswer(a[idx])
 		}
 
 		fmt.Println()
