@@ -3,9 +3,11 @@ package main
 import (
 	"context"
 	"errors"
+	"strings"
 
 	"github.com/cucumber/godog"
 	"github.com/greeflas/itea_golang/cmd"
+	"github.com/greeflas/itea_golang/params"
 )
 
 type CommandStepHandler struct {
@@ -17,15 +19,23 @@ func NewCommandStepHandler(registry *cmd.Registry) *CommandStepHandler {
 }
 
 func (h *CommandStepHandler) RegisterSteps(ctx *godog.ScenarioContext) {
-	ctx.Step(`^I run "([^"]*)" command$`, h.iRunCommand)
+	ctx.Step(`^I run "([^"]*)" command with params "([^"]*)"$`, h.iRunCommand)
 }
 
-func (h *CommandStepHandler) iRunCommand(cmdName string) error {
+func (h *CommandStepHandler) iRunCommand(cmdName string, flags string) error {
 	command := h.registry.FindCommand(cmdName)
 
 	if command == nil {
 		return errors.New("command not found")
 	}
 
-	return command.Run(context.Background(), map[string]string{})
+	var p params.MapParams
+	flagsArr := strings.Split(flags, ",")
+	for _, f := range flagsArr {
+		if err := p.Set(f); err != nil {
+			panic(err)
+		}
+	}
+
+	return command.Run(context.Background(), p)
 }

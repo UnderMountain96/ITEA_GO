@@ -3,9 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+	"strings"
+
 	"github.com/cucumber/godog"
 	"github.com/jackc/pgx/v5"
-	"strings"
 )
 
 type PgxStepHandler struct {
@@ -18,6 +19,7 @@ func NewPgxStepHandler(conn *pgx.Conn) *PgxStepHandler {
 
 func (h *PgxStepHandler) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^I see in "([^"]*)" table:$`, h.iSeeInTable)
+	ctx.Step(`^I see in "([^"]*)" table with params "([^"]*):"$`, h.iSeeInTableWithParams)
 }
 
 func (h *PgxStepHandler) iSeeInTable(tableName string, table *godog.Table) error {
@@ -37,6 +39,45 @@ func (h *PgxStepHandler) iSeeInTable(tableName string, table *godog.Table) error
 		rows, err := h.conn.Query(
 			context.Background(),
 			fmt.Sprintf("SELECT (%s) FROM %s", strings.Join(columnNames, ","), tableName),
+		)
+		if err != nil {
+			return err
+		}
+
+		for rows.Next() {
+			values, err := rows.Values()
+			if err != nil {
+				return err
+			}
+
+			for i, val := range values {
+				if val != expectedValues[i] {
+					return fmt.Errorf("got: %s, want: %s", val, expectedValues[i])
+				}
+			}
+		}
+	}
+
+	return nil
+}
+
+func (h *PgxStepHandler) iSeeInTableWithParams(tableName string, params []string, table *godog.Table) error {
+	var columnNames []string
+
+	for _, headerCell := range table.Rows[0].Cells {
+		columnNames = append(columnNames, headerCell.Value)
+	}
+
+	for _, row := range table.Rows[1:] {
+		var expectedValues []string
+
+		for _, cell := range row.Cells {
+			expectedValues = append(expectedValues, cell.Value)
+		}
+
+		rows, err := h.conn.Query(
+			context.Background(),
+			fmt.Sprintf("SELECT (%s) FROM %s where %s", strings.Join(columnNames, ","), tableName, strings.Join(params, " and ")),
 		)
 		if err != nil {
 			return err
