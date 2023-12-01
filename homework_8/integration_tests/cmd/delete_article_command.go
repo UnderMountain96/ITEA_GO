@@ -2,8 +2,7 @@ package cmd
 
 import (
 	"context"
-	"flag"
-	"os"
+	"errors"
 
 	"github.com/google/uuid"
 	"github.com/greeflas/itea_golang/repository"
@@ -21,14 +20,10 @@ func (c *DeleteArticleCommand) Name() string {
 	return "delete_article"
 }
 
-func (c *DeleteArticleCommand) Run(ctx context.Context) error {
-	cmd := flag.NewFlagSet("delete", flag.ExitOnError)
-	var idStr string
-
-	cmd.StringVar(&idStr, "id", "", "Actical ID")
-
-	if err := cmd.Parse(os.Args[2:]); err != nil {
-		return nil
+func (c *DeleteArticleCommand) Run(ctx context.Context, params map[string]string) error {
+	idStr, ok := params["id"]
+	if !ok {
+		return errors.New("error: id param is required for update")
 	}
 
 	id, err := uuid.Parse(idStr)

@@ -27,5 +27,5 @@ func (h *CommandStepHandler) iRunCommand(cmdName string) error {
 		return errors.New("command not found")
 	}
 
-	return command.Run(context.Background())
+	return command.Run(context.Background(), map[string]string{})
 }

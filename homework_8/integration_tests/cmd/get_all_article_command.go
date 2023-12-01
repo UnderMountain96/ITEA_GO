@@ -18,7 +18,7 @@ func (c *GetAllArticleCommand) Name() string {
 	return "get_all_article"
 }
 
-func (c *GetAllArticleCommand) Run(ctx context.Context) error {
+func (c *GetAllArticleCommand) Run(ctx context.Context, params map[string]string) error {
 	articals, err := c.articleRepository.GetAll(ctx)
 	if err != nil {
 		return err

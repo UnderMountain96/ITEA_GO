@@ -20,7 +20,7 @@ func (c *CreateArticleCommand) Name() string {
 	return "create_article"
 }
 
-func (c *CreateArticleCommand) Run(ctx context.Context) error {
+func (c *CreateArticleCommand) Run(ctx context.Context, params map[string]string) error {
 	article := model.NewArticle(uuid.New(), "This is title!")
 
 	return c.articleRepository.Create(ctx, article)
