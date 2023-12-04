@@ -69,7 +69,7 @@ func TestIsProcessing(t *testing.T) {
 	order := newOrder(customer, Time{time.Now()})
 
 	if order.IsProcessing() {
-		t.Errorf("order srarus must be %q", initiatedStatus)
+		t.Errorf("order status must be %q", initiatedStatus)
 	}
 }
 
@@ -87,7 +87,7 @@ func TestStatusChange(t *testing.T) {
 		}
 
 		if !order.IsProcessing() {
-			t.Errorf("order srarus must be %q", processingStatus)
+			t.Errorf("order status must be %q", processingStatus)
 		}
 	})
 	t.Run("failed set processing status", func(t *testing.T) {
@@ -116,7 +116,7 @@ func TestStatusChange(t *testing.T) {
 		order.SetFailStatus(Time{time.Now()})
 
 		if order.status != failStatus {
-			t.Errorf("order srarus must be %q", failStatus)
+			t.Errorf("order status must be %q", failStatus)
 		}
 	})
 	t.Run("failed set fail status", func(t *testing.T) {
@@ -143,7 +143,7 @@ func TestStatusChange(t *testing.T) {
 		order.SetSuccessStatus(Time{time.Now()})
 
 		if order.status != successStatus {
-			t.Errorf("order srarus must be %q", successStatus)
+			t.Errorf("order status must be %q", successStatus)
 		}
 	})
 	t.Run("failed set success status", func(t *testing.T) {
