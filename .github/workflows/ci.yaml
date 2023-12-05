@@ -22,7 +22,7 @@ jobs:
 
       - name: Restore PostgreSQL database
         run: |
-          sudo systemctl start postgresql.service && psql -U postgres -d lessons -h localhost -p 5432 -f homework_8/integration_tests/backups/backup.sql
+          sudo systemctl start postgresql.service && export PGPASSWORD='pass'; psql -U postgres -d lessons -h localhost -p 5432 -f homework_8/integration_tests/backups/backup.sql
 
       - name: Set up Go
         uses: actions/setup-go@v4
