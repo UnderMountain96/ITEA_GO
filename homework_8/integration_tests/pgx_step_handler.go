@@ -19,7 +19,7 @@ func NewPgxStepHandler(conn *pgx.Conn) *PgxStepHandler {
 
 func (h *PgxStepHandler) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^I see in "([^"]*)" table:$`, h.iSeeInTable)
-	ctx.Step(`^I see in "([^"]*)" table with params "([^"]*):"$`, h.iSeeInTableWithParams)
+	ctx.Step(`^I see record with ID "([^"]*)" in "([^"]*)" table:$`, h.iSeeWithIDInTable)
 }
 
 func (h *PgxStepHandler) iSeeInTable(tableName string, table *godog.Table) error {
@@ -61,7 +61,7 @@ func (h *PgxStepHandler) iSeeInTable(tableName string, table *godog.Table) error
 	return nil
 }
 
-func (h *PgxStepHandler) iSeeInTableWithParams(tableName string, params []string, table *godog.Table) error {
+func (h *PgxStepHandler) iSeeWithIDInTable(id string, tableName string, table *godog.Table) error {
 	var columnNames []string
 
 	for _, headerCell := range table.Rows[0].Cells {
@@ -77,7 +77,7 @@ func (h *PgxStepHandler) iSeeInTableWithParams(tableName string, params []string
 
 		rows, err := h.conn.Query(
 			context.Background(),
-			fmt.Sprintf("SELECT (%s) FROM %s where %s", strings.Join(columnNames, ","), tableName, strings.Join(params, " and ")),
+			fmt.Sprintf("SELECT (%s) FROM %s where id=%s", strings.Join(columnNames, ","), tableName, id),
 		)
 		if err != nil {
 			return err

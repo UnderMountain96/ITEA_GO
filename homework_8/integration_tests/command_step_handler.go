@@ -33,7 +33,7 @@ func (h *CommandStepHandler) iRunCommand(cmdName string, flags string) error {
 	flagsArr := strings.Split(flags, ",")
 	for _, f := range flagsArr {
 		if err := p.Set(f); err != nil {
-			panic(err)
+			return err
 		}
 	}
 
