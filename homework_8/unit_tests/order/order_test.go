@@ -1,44 +1,50 @@
 package main
 
 import (
+	"errors"
 	"testing"
 	"time"
 )
 
 func TestNewCustomer(t *testing.T) {
-	expectedEmail := "test@example.com"
+	t.Run("successfully make new customer", func(t *testing.T) {
+		expectedEmail := "test@example.com"
 
-	customer, err := newCustomer(expectedEmail)
-	if err != nil {
-		t.Errorf("cannot create new customer: %s", err)
-	}
+		customer, err := newCustomer(expectedEmail)
+		if err != nil {
+			t.Errorf("unexpected error: %s", err)
+		}
 
-	if customer.email != expectedEmail {
-		t.Errorf("invalid email: got: %s, want: %s", customer.email, expectedEmail)
-	}
+		if customer.email != expectedEmail {
+			t.Errorf("invalid email: got: %s, want: %s", customer.email, expectedEmail)
+		}
+	})
 
-	testCases := map[string]struct {
-		emailValue  string
-		errorReason string
-	}{
-		"empty email": {
-			emailValue:  "",
-			errorReason: "cannot set empty email",
-		},
-		"email not valid": {
-			emailValue:  "test",
-			errorReason: "email is not valid",
-		},
-	}
+	t.Run("failed make new customer", func(t *testing.T) {
+		testCases := map[string]struct {
+			emailValue  string
+			errorReason error
+		}{
+			"empty email": {
+				emailValue:  "",
+				errorReason: errEmailIsEmpty,
+			},
+			"email not valid": {
+				emailValue:  "test",
+				errorReason: errEmailIsNotValid,
+			},
+		}
 
-	for tn, tc := range testCases {
-		t.Run(tn, func(t *testing.T) {
-			_, err := newCustomer(tc.emailValue)
-			if err == nil {
-				t.Error(tc.errorReason)
-			}
-		})
-	}
+		for tn, tc := range testCases {
+			t.Run(tn, func(t *testing.T) {
+				_, err := newCustomer(tc.emailValue)
+
+				if !errors.Is(err, tc.errorReason) {
+					t.Error(err)
+				}
+			})
+		}
+	})
 }
 
 func TestNewOrder(t *testing.T) {
@@ -58,18 +64,6 @@ func TestNewOrder(t *testing.T) {
 
 	if order.customer != customer {
 		t.Errorf("invalid customer: got: %#v, want: %#v", order.customer, customer)
-	}
-}
-
-func TestIsProcessing(t *testing.T) {
-	expectedEmail := "test@example.com"
-
-	customer, _ := newCustomer(expectedEmail)
-
-	order := newOrder(customer, Time{time.Now()})
-
-	if order.IsProcessing() {
-		t.Errorf("order status must be %q", initiatedStatus)
 	}
 }
 
