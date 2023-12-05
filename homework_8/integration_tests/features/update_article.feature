@@ -1,7 +1,7 @@
 Feature: Update article
 
   Scenario: Success
-    When I run "update_article" command with params "id=6912354f-43b4-4106-8744-d84471adf59b,body=test"
-    Then I see record with ID "6912354f-43b4-4106-8744-d84471adf59b" in "articles" table: 
+    When I run "update_article" command with params "id=4ddc8d46-f08f-43da-b227-3afd79c69d16,body=test"
+    Then I see record with ID "4ddc8d46-f08f-43da-b227-3afd79c69d16" in "articles" table: 
       | body         |
       | test         |
