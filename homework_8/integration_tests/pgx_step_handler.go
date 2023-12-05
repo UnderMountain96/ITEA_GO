@@ -19,7 +19,7 @@ func NewPgxStepHandler(conn *pgx.Conn) *PgxStepHandler {
 
 func (h *PgxStepHandler) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^I see in "([^"]*)" table:$`, h.iSeeInTable)
-	ctx.Step(`^I see record with ID "([^"]*)" in "([^"]*)" table:$`, h.iSeeWithIDInTable)
+	ctx.Step(`^Then I see record with ID "([^"]*)" in "([^"]*)" table:$`, h.iSeeWithIDInTable)
 }
 
 func (h *PgxStepHandler) iSeeInTable(tableName string, table *godog.Table) error {
