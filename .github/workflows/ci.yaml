@@ -22,7 +22,7 @@ jobs:
 
       - name: Restore PostgreSQL database
         run: |
-          psql -U postgres -d lessons -h localhost -p 5432 -f homework_8/integration_tests/backups/backup.sql
+          service postgresql start && psql -U postgres -d lessons -h localhost -p 5432 -f homework_8/integration_tests/backups/backup.sql
 
       - name: Set up Go
         uses: actions/setup-go@v4
