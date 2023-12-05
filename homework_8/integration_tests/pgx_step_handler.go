@@ -77,7 +77,7 @@ func (h *PgxStepHandler) iSeeWithIDInTable(id string, tableName string, table *g
 
 		rows, err := h.conn.Query(
 			context.Background(),
-			fmt.Sprintf("SELECT (%s) FROM %s where id=%s", strings.Join(columnNames, ","), tableName, id),
+			fmt.Sprintf("SELECT (%s) FROM %s where id=%q", strings.Join(columnNames, ","), tableName, id),
 		)
 		if err != nil {
 			return err
