@@ -10,7 +10,5 @@ ALTER TABLE public.articles OWNER TO postgres;
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-COPY public.articles (id, title, body, created_at, updated_at) FROM stdin;
-4ddc8d46-f08f-43da-b227-3afd79c69d16	for update	some body	2023-12-05 14:30:00	2023-12-05 14:30:00
-6912354f-43b4-4106-8744-d84471adf59b	for delete	some body	2023-12-05 14:30:00	2023-12-05 14:30:00
-\.
+INSERT INTO public.articles (id, title, body) VALUES ('6912354f-43b4-4106-8744-d84471adf59b', 'for delete', 'some body');
+INSERT INTO public.articles (id, title, body) VALUES ('4ddc8d46-f08f-43da-b227-3afd79c69d16', 'for update', 'some body');
