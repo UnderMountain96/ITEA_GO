@@ -1,3 +1,7 @@
 go 1.21.4
 
-use ./homework_9/json
+use (
+	./homework_7
+	./homework_9/json
+	./homework_9/student_testing
+)
