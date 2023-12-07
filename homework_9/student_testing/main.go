@@ -61,54 +61,6 @@ func main() {
 	if err := studentTestRunner.Run(); err != nil {
 		panic(err)
 	}
-
-	// availableTests, err := testRepository.GetAll(ctx)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
-
-	// availableJsonTests, err := jsonTestRepository.GetAll()
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
-
-	// testRetriever := []service.TestRetriever{}
-
-	// for _, t := range availableTests {
-	// 	testRetriever = append(testRetriever, t)
-	// }
-	// for _, t := range availableJsonTests {
-	// 	testRetriever = append(testRetriever, t)
-	// }
-
-	// test, err := service.ShowAvailableTests(testRetriever...)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
-
-	// questions, err := questionRepository.Get(ctx, test.GetID())
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
-
-	// questions1, err := jsonQuestionRepository.Get(test.GetID())
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
-	// _ = questions1
-	// test.SetQuestions(questions)
-
-	// if err := service.BeginTest(test); err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
-
-	// service.ShowResult(test)
 }
 
 func loadEnv(envFilePath string) error {
