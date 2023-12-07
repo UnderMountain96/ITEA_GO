@@ -2,6 +2,7 @@ go 1.21.4
 
 use (
 	./homework_7
+	./homework_9/http
 	./homework_9/json
 	./homework_9/student_testing
 )
