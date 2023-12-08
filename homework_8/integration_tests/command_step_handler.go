@@ -19,10 +19,21 @@ func NewCommandStepHandler(registry *cmd.Registry) *CommandStepHandler {
 }
 
 func (h *CommandStepHandler) RegisterSteps(ctx *godog.ScenarioContext) {
-	ctx.Step(`^I run "([^"]*)" command with params "([^"]*)"$`, h.iRunCommand)
+	ctx.Step(`^I run "([^"]*)" command$`, h.iRunCommand)
+	ctx.Step(`^I run "([^"]*)" command with params "([^"]*)"$`, h.iRunCommandWithParams)
 }
 
-func (h *CommandStepHandler) iRunCommand(cmdName string, flags string) error {
+func (h *CommandStepHandler) iRunCommand(cmdName string) error {
+	command := h.registry.FindCommand(cmdName)
+
+	if command == nil {
+		return errors.New("command not found")
+	}
+
+	return command.Run(context.Background(), map[string]string{})
+}
+
+func (h *CommandStepHandler) iRunCommandWithParams(cmdName string, flags string) error {
 	command := h.registry.FindCommand(cmdName)
 
 	if command == nil {

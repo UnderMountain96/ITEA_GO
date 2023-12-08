@@ -14,7 +14,7 @@ import (
 func main() {
 	ctx := context.Background()
 
-	connStr := "postgres://postgres:pass@localhost:5432/lessons"
+	connStr := "postgres://postgres:pass@192.168.230.128:5432/lessons"
 	conn, err := pgx.Connect(ctx, connStr)
 	if err != nil {
 		panic(err)
@@ -23,10 +23,8 @@ func main() {
 
 	articleRepository := repository.NewArticleRepository(conn)
 	createArticleCommand := cmd.NewCreateArticleCommand(articleRepository)
-	getAllArticleCommand := cmd.NewGetAllArticleCommand(articleRepository)
 	updateArticleCommand := cmd.NewUpdateArticleCommand(articleRepository)
-	deleteArticleCommand := cmd.NewDeleteArticleCommand(articleRepository)
-	commandRegistry := cmd.NewRegistry(createArticleCommand, getAllArticleCommand, updateArticleCommand, deleteArticleCommand)
+	commandRegistry := cmd.NewRegistry(createArticleCommand, updateArticleCommand)
 
 	cmdName := os.Args[1]
 	command := commandRegistry.FindCommand(cmdName)
