@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"os"
 
@@ -20,7 +21,9 @@ func main() {
 		panic(err)
 	}
 
-	orders.ShowRefundOrders()
+	for _, id := range orders.GetRefundOrders() {
+		fmt.Printf("Order %q is %s.\n", id, model.RefundType)
+	}
 }
 
 func readFile(path string) ([]byte, error) {

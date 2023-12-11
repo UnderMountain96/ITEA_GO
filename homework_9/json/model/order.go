@@ -1,8 +1,6 @@
 package model
 
 import (
-	"fmt"
-
 	"github.com/google/uuid"
 )
 
@@ -18,12 +16,14 @@ type Orders struct {
 	Orders []Order
 }
 
-func (o *Orders) ShowRefundOrders() {
+func (o *Orders) GetRefundOrders() []uuid.UUID {
+	refundOrders := []uuid.UUID{}
 	for _, o := range o.Orders {
-		if id := o.IsRefund(); id != uuid.Nil {
-			fmt.Printf("Order %q is %s.\n", id, RefundType)
+		if o.IsRefund() {
+			refundOrders = append(refundOrders, o.ID)
 		}
 	}
+	return refundOrders
 }
 
 type Order struct {
@@ -32,14 +32,14 @@ type Order struct {
 	Transactions []Transaction `json:"transactions"`
 }
 
-func (o *Order) IsRefund() uuid.UUID {
+func (o *Order) IsRefund() bool {
 	for _, t := range o.Transactions {
 		if t.isRefund() {
-			return o.ID
+			return true
 		}
 	}
 
-	return uuid.Nil
+	return false
 }
 
 type Transaction struct {

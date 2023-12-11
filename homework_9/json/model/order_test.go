@@ -18,7 +18,7 @@ func TestOrderIsRefund(t *testing.T) {
 			},
 		}
 
-		if expectedId != order.IsRefund() {
+		if !order.IsRefund() {
 			t.Errorf("order type must be %q", RefundType)
 		}
 	})
@@ -33,7 +33,7 @@ func TestOrderIsRefund(t *testing.T) {
 			},
 		}
 
-		if expectedId == order.IsRefund() {
+		if order.IsRefund() {
 			t.Errorf("order type not must be %q", RefundType)
 		}
 	})
@@ -57,17 +57,11 @@ func TestOrderIsRefund(t *testing.T) {
 			},
 		}}
 
-		var ref int
-		wantRef := 2
+		expectedRefundOrders := 2
+		refundOrders := len(orders.GetRefundOrders())
 
-		for _, o := range orders.Orders {
-			if o.IsRefund() != uuid.Nil {
-				ref++
-			}
-		}
-
-		if ref != wantRef {
-			t.Errorf("invalid refund orders: got: %d, want: %d", ref, wantRef)
+		if refundOrders != expectedRefundOrders {
+			t.Errorf("invalid refund orders: got: %d, want: %d", refundOrders, refundOrders)
 		}
 	})
 	t.Run("transaction type settle", func(t *testing.T) {
