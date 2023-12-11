@@ -55,12 +55,12 @@ func getUserInfo(username string) (*dto.GitHubUser, error) {
 		return user, nil
 	}
 
-	return nil, fmt.Errorf("getUserInfo: unknown error, Status Code - %d", http.StatusNotFound)
+	return nil, fmt.Errorf("getUserInfo: unexpected status code: %d", resp.StatusCode)
 }
 
 func printUserInfo(user *dto.GitHubUser) {
 	fmt.Printf("ID:\t\t%d\n", user.Id)
 	fmt.Printf("Name:\t\t%s\n", user.Name)
 	fmt.Printf("Bio:\t\t%s\n", user.Bio)
-	fmt.Printf("Created At:\t%s\n", user.CreatedAt.Format("02.01.2006 15:04:05"))
+	fmt.Printf("Created At:\t%d\n", user.CreatedAt.Year())
 }
