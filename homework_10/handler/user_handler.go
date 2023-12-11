@@ -5,7 +5,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/UnderMountain96/ITEA_GO/http_server/model"
 	"github.com/google/uuid"
@@ -97,13 +96,7 @@ func (h *UserHandler) handlePatch(w http.ResponseWriter, r *http.Request) error 
 
 	for _, u := range h.users {
 		if u.ID == req.ID {
-			if req.Username != "" {
-				u.Username = req.Username
-			}
-			if req.Email != "" {
-				u.Email = req.Email
-			}
-			u.UpdateAt = time.Now()
+			u.Update(req.Username, req.Email)
 
 			w.WriteHeader(http.StatusOK)
 
@@ -136,7 +129,7 @@ func (h *UserHandler) handleDelete(w http.ResponseWriter, r *http.Request) error
 		if u.ID == req.ID {
 			h.users = append(h.users[:i], h.users[i+1:]...)
 
-			w.WriteHeader(http.StatusCreated)
+			w.WriteHeader(http.StatusOK)
 
 			return nil
 		}
