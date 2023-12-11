@@ -5,17 +5,19 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/UnderMountain96/ITEA_GO/cmd"
+	"github.com/UnderMountain96/ITEA_GO/params"
 	"github.com/cucumber/godog"
-	"github.com/greeflas/itea_golang/cmd"
-	"github.com/greeflas/itea_golang/params"
+	"github.com/jackc/pgx/v5"
 )
 
 type CommandStepHandler struct {
 	registry *cmd.Registry
+	conn     *pgx.Conn
 }
 
-func NewCommandStepHandler(registry *cmd.Registry) *CommandStepHandler {
-	return &CommandStepHandler{registry: registry}
+func NewCommandStepHandler(registry *cmd.Registry, conn *pgx.Conn) *CommandStepHandler {
+	return &CommandStepHandler{registry: registry, conn: conn}
 }
 
 func (h *CommandStepHandler) RegisterSteps(ctx *godog.ScenarioContext) {
@@ -34,6 +36,16 @@ func (h *CommandStepHandler) iRunCommand(cmdName string) error {
 }
 
 func (h *CommandStepHandler) iRunCommandWithParams(cmdName string, flags string) error {
+	_, err := h.conn.Exec(
+		context.Background(),
+		"INSERT INTO articles (id, title, body) VALUES ($1, $2, $3)",
+		"a462db9b-b7ae-434c-87af-943d080d5c00",
+		"for update",
+		"some body",
+	)
+	if err != nil {
+		panic(err)
+	}
 	command := h.registry.FindCommand(cmdName)
 
 	if command == nil {

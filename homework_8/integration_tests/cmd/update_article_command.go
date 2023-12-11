@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 
+	"github.com/UnderMountain96/ITEA_GO/repository"
 	"github.com/google/uuid"
-	"github.com/greeflas/itea_golang/repository"
 )
 
 type UpdateArticleCommand struct {

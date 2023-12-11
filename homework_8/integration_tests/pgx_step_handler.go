@@ -77,7 +77,8 @@ func (h *PgxStepHandler) iSeeWithIDInTable(id string, tableName string, table *g
 
 		rows, err := h.conn.Query(
 			context.Background(),
-			fmt.Sprintf("SELECT (%s) FROM %s where id=%q", strings.Join(columnNames, ","), tableName, id),
+			fmt.Sprintf(`SELECT (%s) FROM %s where id=$1`, strings.Join(columnNames, ","), tableName),
+			id,
 		)
 		if err != nil {
 			return err
@@ -88,9 +89,19 @@ func (h *PgxStepHandler) iSeeWithIDInTable(id string, tableName string, table *g
 			if err != nil {
 				return err
 			}
+			stringSlice := make([]string, 0)
 
-			for i, val := range values {
-				if val != expectedValues[i] {
+			for _, val := range values {
+				switch v := val.(type) {
+				case []interface{}:
+					for _, i := range v {
+						stringSlice = append(stringSlice, i.(string))
+					}
+				}
+			}
+
+			for i, val := range expectedValues {
+				if val != stringSlice[i] {
 					return fmt.Errorf("got: %s, want: %s", val, expectedValues[i])
 				}
 			}

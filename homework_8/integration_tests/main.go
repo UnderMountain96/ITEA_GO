@@ -5,16 +5,16 @@ import (
 	"flag"
 	"os"
 
-	"github.com/greeflas/itea_golang/cmd"
-	"github.com/greeflas/itea_golang/params"
-	"github.com/greeflas/itea_golang/repository"
+	"github.com/UnderMountain96/ITEA_GO/cmd"
+	"github.com/UnderMountain96/ITEA_GO/params"
+	"github.com/UnderMountain96/ITEA_GO/repository"
 	"github.com/jackc/pgx/v5"
 )
 
 func main() {
 	ctx := context.Background()
 
-	connStr := "postgres://postgres:pass@192.168.230.128:5432/lessons"
+	connStr := "postgres://postgres:pass@localhost:5432/lessons"
 	conn, err := pgx.Connect(ctx, connStr)
 	if err != nil {
 		panic(err)

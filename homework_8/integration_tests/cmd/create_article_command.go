@@ -3,9 +3,9 @@ package cmd
 import (
 	"context"
 
+	"github.com/UnderMountain96/ITEA_GO/model"
+	"github.com/UnderMountain96/ITEA_GO/repository"
 	"github.com/google/uuid"
-	"github.com/greeflas/itea_golang/model"
-	"github.com/greeflas/itea_golang/repository"
 )
 
 type CreateArticleCommand struct {

@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/UnderMountain96/ITEA_GO/model"
 	"github.com/google/uuid"
-	"github.com/greeflas/itea_golang/model"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -18,10 +18,7 @@ func NewArticleRepository(conn *pgx.Conn) *ArticleRepository {
 }
 
 func (r *ArticleRepository) Create(ctx context.Context, a *model.Article) error {
-	sql := `
-INSERT INTO articles (id, title, body, created_at, updated_at)
-VALUES ($1, $2, $3, $4, $5)
-`
+	sql := `INSERT INTO articles (id, title, body, created_at, updated_at) VALUES ($1, $2, $3, $4, $5)`
 
 	_, err := r.conn.Exec(
 		ctx,

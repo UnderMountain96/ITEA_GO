@@ -2,18 +2,19 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
+	"github.com/UnderMountain96/ITEA_GO/cmd"
+	"github.com/UnderMountain96/ITEA_GO/repository"
 	"github.com/cucumber/godog"
-	"github.com/greeflas/itea_golang/cmd"
-	"github.com/greeflas/itea_golang/repository"
 	"github.com/jackc/pgx/v5"
 )
 
 func TestFeatures(t *testing.T) {
 	ctx := context.Background()
 
-	connStr := "postgres://postgres:pass@192.168.230.128:5432/lessons"
+	connStr := "postgres://postgres:pass@localhost:5432/lessons"
 	conn, err := pgx.Connect(ctx, connStr)
 	if err != nil {
 		panic(err)
@@ -35,27 +36,17 @@ func TestFeatures(t *testing.T) {
 		},
 		ScenarioInitializer: func(ctx *godog.ScenarioContext) {
 			ctx.Before(func(ctx context.Context, sc *godog.Scenario) (context.Context, error) {
-				_, err := conn.Exec(
-					context.Background(),
-					"INSERT INTO articles (id, title, body) VALUES ($1, $2, $3)",
-					"a462db9b-b7ae-434c-87af-943d080d5c00",
-					"for update",
-					"some body",
-				)
-
-				return ctx, err
-			})
-
-			ctx.After(func(ctx context.Context, sc *godog.Scenario, err error) (context.Context, error) {
 				_, err = conn.Exec(
 					context.Background(),
 					"DELETE FROM articles",
 				)
 
+				fmt.Println("CLEAR TABLE articles")
+
 				return ctx, err
 			})
 
-			commandStepHandler := NewCommandStepHandler(commandRegistry)
+			commandStepHandler := NewCommandStepHandler(commandRegistry, conn)
 			commandStepHandler.RegisterSteps(ctx)
 
 			pgxStepHandler := NewPgxStepHandler(conn)
