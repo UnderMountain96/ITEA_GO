@@ -138,7 +138,7 @@ func TestUserHandler(t *testing.T) {
 			Method: http.MethodDelete,
 			Body: io.NopCloser(
 				bytes.NewBufferString(
-					fmt.Sprintf(`{"id": %s}`, expectedId),
+					fmt.Sprintf(`{"id": %q}`, expectedId),
 				),
 			),
 			Header: http.Header{"Authorization": []string{fmt.Sprint("Bearer ", token)}},
