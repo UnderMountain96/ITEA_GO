@@ -23,3 +23,7 @@ Code from homeworks of Golang course in IT Education Academy.
    2. [User DB V2](homework_6/user_db_v2.go)
 6. [Homework 7](homework_7/)
    1. [Student Testing V2](homework_7/main.go)
+7. [Homework 8](homework_8/)
+   1. [Unit Tests Student Testing](homework_8/unit_tests/student_db/student_db_test.go)
+   2. [Unit Tests Order](homework_8/unit_tests/order/order_test.go)
+   3. [Integration Tests](homework_8/integration_tests/)
