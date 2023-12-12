@@ -27,3 +27,7 @@ Code from homeworks of Golang course in IT Education Academy.
    1. [Unit Tests Student Testing](homework_8/unit_tests/student_db/student_db_test.go)
    2. [Unit Tests Order](homework_8/unit_tests/order/order_test.go)
    3. [Integration Tests](homework_8/integration_tests/)
+8. [Homework 9](homework_9/)
+   1. [JSON](homework_9/json/main.go)
+   2. [Student Testing JSON](homework_9/student_testing/main.go)
+   3. [HTTP](homework_9/http/main.go)
