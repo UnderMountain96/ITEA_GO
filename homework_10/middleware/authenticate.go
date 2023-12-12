@@ -23,7 +23,7 @@ func (m *AuthenticateMiddleware) Wrap(next http.Handler) http.HandlerFunc {
 			token := r.Header.Get("Authorization")
 
 			if !m.isValid(token) {
-				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				http.Error(w, `{"error": "Unauthorized"}`, http.StatusUnauthorized)
 				return
 			}
 		}

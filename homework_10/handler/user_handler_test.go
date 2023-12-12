@@ -55,9 +55,17 @@ func TestUserHandler(t *testing.T) {
 	})
 
 	t.Run("Method Post", func(t *testing.T) {
+		expectedUser := model.User{
+			Username: "user 3",
+			Email:    "user_3@example.com",
+		}
 		req := &http.Request{
 			Method: http.MethodPost,
-			Body:   io.NopCloser(bytes.NewBufferString(`{"username": "user 3", "email": "user_3@example.com"}`)),
+			Body: io.NopCloser(
+				bytes.NewBufferString(
+					fmt.Sprintf(`{"username": %q, "email": %q}`, expectedUser.Username, expectedUser.Email),
+				),
+			),
 			Header: http.Header{"Authorization": []string{fmt.Sprint("Bearer ", token)}},
 		}
 		rw := httptest.NewRecorder()
@@ -75,10 +83,24 @@ func TestUserHandler(t *testing.T) {
 			t.Errorf("invalid response status code: got: %d, want: %d", rw.Code, expectedCode)
 		}
 
-		expectedUsersLen := 3
+		user := &model.User{}
 
-		if len(handler.users) != expectedUsersLen {
-			t.Errorf("invalid users length: got: %d, want: %d", len(handler.users), expectedUsersLen)
+		for _, u := range handler.users {
+			if u.Username == expectedUser.Username {
+				user = u
+			}
+		}
+
+		if user.Username != expectedUser.Username {
+			t.Errorf("invalid Username: got: %s, want: %s", user.Username, expectedUser.Username)
+		}
+
+		if user.Email != expectedUser.Email {
+			t.Errorf("invalid Email: got: %s, want: %s", user.Email, expectedUser.Email)
+		}
+
+		if !user.CreatedAt.Equal(user.UpdatedAt) {
+			t.Errorf("UpdatedAt must be equal CreatedAt: got: %s, want: %s", user.UpdatedAt, user.CreatedAt)
 		}
 	})
 
@@ -111,9 +133,14 @@ func TestUserHandler(t *testing.T) {
 	})
 
 	t.Run("Method Delete", func(t *testing.T) {
+		expectedId := uuid.MustParse("b03b5f94-5904-43f2-b1f3-4078c6d47c24")
 		req := &http.Request{
 			Method: http.MethodDelete,
-			Body:   io.NopCloser(bytes.NewBufferString(`{"id": "b03b5f94-5904-43f2-b1f3-4078c6d47c24"}`)),
+			Body: io.NopCloser(
+				bytes.NewBufferString(
+					fmt.Sprintf(`{"id": %s}`, expectedId),
+				),
+			),
 			Header: http.Header{"Authorization": []string{fmt.Sprint("Bearer ", token)}},
 		}
 		rw := httptest.NewRecorder()
@@ -131,10 +158,10 @@ func TestUserHandler(t *testing.T) {
 			t.Errorf("invalid response status code: got: %d, want: %d", rw.Code, expectedCode)
 		}
 
-		expectedUsersLen := 1
-
-		if len(handler.users) != expectedUsersLen {
-			t.Errorf("invalid users length: got: %d, want: %d", len(handler.users), expectedUsersLen)
+		for _, u := range handler.users {
+			if u.ID == expectedId {
+				t.Errorf("invalid user with ID: %q must be deleted", expectedId)
+			}
 		}
 	})
 

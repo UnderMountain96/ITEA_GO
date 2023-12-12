@@ -21,11 +21,12 @@ func (u *User) Update(username string, email string) {
 }
 
 func NewUser(username string, email string) *User {
+	timeNow := time.Now()
 	return &User{
 		ID:        uuid.New(),
 		Username:  username,
 		Email:     email,
-		UpdatedAt: time.Now(),
-		CreatedAt: time.Now(),
+		UpdatedAt: timeNow,
+		CreatedAt: timeNow,
 	}
 }

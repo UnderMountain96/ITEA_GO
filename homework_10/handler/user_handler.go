@@ -104,7 +104,7 @@ func (h *UserHandler) handlePatch(w http.ResponseWriter, r *http.Request) error 
 		}
 	}
 
-	w.WriteHeader(http.StatusBadRequest)
+	w.WriteHeader(http.StatusNotFound)
 
 	return nil
 }
@@ -135,7 +135,7 @@ func (h *UserHandler) handleDelete(w http.ResponseWriter, r *http.Request) error
 		}
 	}
 
-	w.WriteHeader(http.StatusBadRequest)
+	w.WriteHeader(http.StatusNotFound)
 
 	return nil
 }
