@@ -1,0 +1,119 @@
+{
+    "785be0bd-3459-45aa-809b-3744ca0c2dbd": [
+        {
+            "id": "a1e8b0b8-2642-4c25-90a5-58fbfa7d5d40",
+            "text": "What does 'HTML' stand for in web development?",
+            "answers": [
+                {
+                    "id": "a1f2c2c2-fb12-48ed-8f8c-c442a04ea5a1",
+                    "text": "Hyperlink Text Markup Language"
+                },
+                {
+                    "id": "52588ac1-2292-4544-b637-8629aacb3d85",
+                    "text": "Hyper Text Markup Language"
+                },
+                {
+                    "id": "b833ed3f-d8c8-49ce-8328-9817d3e1ef73",
+                    "text": "Home Tool Markup Language"
+                },
+                {
+                    "id": "54a1104e-140f-4f49-b006-1cf4cd6863fc",
+                    "text": "Hyper Transfer Markup Language"
+                }
+            ],
+            "correct_answer_id": "52588ac1-2292-4544-b637-8629aacb3d85"
+        },
+        {
+            "id": "5979eb08-860f-4b83-a540-79405e49b18b",
+            "text": "Which programming language is commonly used for building Android apps?",
+            "answers": [
+                {
+                    "id": "3fd41157-7df8-4212-a34c-aafd64e66f33",
+                    "text": "Swift"
+                },
+                {
+                    "id": "e1da3cf0-cf34-428e-8c76-4fb43a324232",
+                    "text": "Java"
+                },
+                {
+                    "id": "ac4dc133-05a1-4b8f-9a8a-0e814bc1e7b1",
+                    "text": "C#"
+                },
+                {
+                    "id": "cbf79129-869c-4faf-a863-700b5a6ead55",
+                    "text": "Python"
+                }
+            ],
+            "correct_answer_id": "e1da3cf0-cf34-428e-8c76-4fb43a324232"
+        },
+        {
+            "id": "9e2e094e-367f-4e30-a2b4-7b6ef6c39917",
+            "text": "What is the function of a firewall in network security?",
+            "answers": [
+                {
+                    "id": "4cc73d27-91bc-4892-b22d-c30ef0213c0a",
+                    "text": "It accelerates internet speed"
+                },
+                {
+                    "id": "503dcb70-2906-49d6-8ab8-05356fe97b4b",
+                    "text": "It protects a network by controlling incoming and outgoing network traffic"
+                },
+                {
+                    "id": "f8891592-79de-4047-9fa5-db1433df7aef",
+                    "text": "It manages hardware devices"
+                },
+                {
+                    "id": "a39c00fa-5357-45da-a41c-e0e25eaa024d",
+                    "text": "It encrypts data transmissions"
+                }
+            ],
+            "correct_answer_id": "503dcb70-2906-49d6-8ab8-05356fe97b4b"
+        },
+        {
+            "id": "5be0493b-90f8-4a36-8bbd-878c9d9e935d",
+            "text": "Which of the following is NOT a type of cloud service model?",
+            "answers": [
+                {
+                    "id": "838251cc-2ffe-4c20-ad1e-e93cfaaf9223",
+                    "text": "Infrastructure as a Service (IaaS)"
+                },
+                {
+                    "id": "be6c87a2-02b3-41e2-bbf3-2a25dc4cca83",
+                    "text": "Platform as a Service (PaaS)"
+                },
+                {
+                    "id": "1900b220-78c6-485f-a158-fcd6a180da2f",
+                    "text": "Software as a Service (SaaS)"
+                },
+                {
+                    "id": "a0296316-f213-4071-841f-ba32787bab28",
+                    "text": "Mainframe as a Service (MaaS)"
+                }
+            ],
+            "correct_answer_id": "a0296316-f213-4071-841f-ba32787bab28"
+        },
+        {
+            "id": "6f01c39d-622b-4f3b-b557-5f786832e747",
+            "text": "What is the purpose of SQL in relation to databases?",
+            "answers": [
+                {
+                    "id": "86ccdc7b-764c-423c-a416-958d9ad9ed7e",
+                    "text": "To perform security scans"
+                },
+                {
+                    "id": "a7dbb67c-748d-4e33-b393-3fe9ef1d4e32",
+                    "text": "To design user interfaces"
+                },
+                {
+                    "id": "9640e94c-8ed2-4969-bd94-1e9b91b8c2b1",
+                    "text": "To manage and manipulate data"
+                },
+                {
+                    "id": "ded06d4b-ca50-4b4d-850d-9cfb57c8125f",
+                    "text": "To create graphical elements"
+                }
+            ],
+            "correct_answer_id": "9640e94c-8ed2-4969-bd94-1e9b91b8c2b1"
+        }
+    ]
+}

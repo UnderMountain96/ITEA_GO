@@ -6,8 +6,27 @@ jobs:
   tests:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_DB: lessons
+          POSTGRES_PASSWORD: pass
+          POSTGRES_USER: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
       - uses: actions/checkout@v3
+
+      - name: Restore PostgreSQL database
+        run: |
+          sudo systemctl start postgresql.service && export PGPASSWORD=pass; psql -U postgres -d lessons -h localhost -p 5432 -f homework_8/integration_tests/backups/backup.sql
 
       - name: Set up Go
         uses: actions/setup-go@v4
@@ -15,4 +34,11 @@ jobs:
           go-version: '1.21'
 
       - name: Run unit tests
+        run: cd homework_8/unit_tests && go test -v ./...
+
+      - name: Run integration tests
+        run: cd homework_8/integration_tests && go test -v ./...
+        
+      - name: Run unit tests
         run: cd homework_10 && go test -v ./...
+
