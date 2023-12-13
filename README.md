@@ -33,3 +33,5 @@ Code from homeworks of Golang course in IT Education Academy.
    3. [HTTP](homework_9/http/main.go)
 9. [Homework 10](homework_10/)
    1. [HTTP Server](homework_10/main.go)
+10. [Homework 11](homework_11/)
+   1. [Copy files](homework_11/main.go)
