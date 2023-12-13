@@ -7,4 +7,5 @@ use (
 	./homework_9/http
 	./homework_9/json
 	./homework_9/student_testing
+  ./homework_10
 )
