@@ -31,3 +31,5 @@ Code from homeworks of Golang course in IT Education Academy.
    1. [JSON](homework_9/json/main.go)
    2. [Student Testing JSON](homework_9/student_testing/main.go)
    3. [HTTP](homework_9/http/main.go)
+9. [Homework 10](homework_10/)
+   1. [HTTP Server](homework_10/main.go)
